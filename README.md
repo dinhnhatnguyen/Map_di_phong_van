@@ -158,6 +158,22 @@ Không cần nhớ hết các mẫu, mỗi loại patterns nắm 1-2 cá
 
 ---
 
+## NOTE thêm mấy cái mập chuẩn bị khi đi phỏng vấn:
+
+### Link câu hỏi chuẩn bị
+
+https://claude.ai/share/9bb60155-137b-4b11-b6c1-6b4f36354492
+
+https://claude.ai/share/ddcd1c2a-2e25-4887-b4b0-7add63c212de
+
+### Mấy cái mập chuẩn bị trước khi phỏng vấn fresher
+
+- [NOTE 1](chuan_bi_phong_van.md)
+
+- [NOTE 2](mock_interview_1.md)
+
+---
+
 &nbsp;&nbsp;&nbsp;&nbsp;Hy vọng những kinh nghiệm nhỏ này sẽ giúp ích cho bạn nào đang chuẩn bị đi tìm việc — nhất là mấy bạn fresher.
 
 Đừng ngại bị tạch, đừng sợ bị đánh giá, mạnh dạn apply, mạnh dạn học,sửa sai.
@@ -172,4 +188,4 @@ Không cần nhớ hết các mẫu, mỗi loại patterns nắm 1-2 cá
 
 📌 GitHub: https://github.com/dinhnhatnguyen
 
-Chúc mấy bạ thành công 🔥
+Chúc mấy bạn thành công 🔥
