@@ -50,16 +50,16 @@ flowchart LR
     s2@{ shape: rounded}
     s3@{ shape: rounded}
     gateway@{ shape: rounded}
-    style s1 fill:#99ccff,stroke:#333,stroke-width:2px,color:black
-    style s2 fill:#99ff99,stroke:#333,stroke-width:2px,color:black
-    style s3 fill:#cc99ff,stroke:#333,stroke-width:2px,color:black
-    style db1 fill:#eeeeee,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5
-    style db2 fill:#eeeeee,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5
-    style db3 fill:#eeeeee,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5
-    style user fill:#FFCDD2,stroke:#333,stroke-width:2px,color:black
-    style gateway fill:#FFF9C4,stroke:#333,stroke-width:2px,color:black
-    style Services_Layer fill:none,stroke:#666,stroke-width:2px,stroke-dasharray: 5 5
-    style Data_Layer fill:none,stroke:#666,stroke-width:2px,stroke-dasharray: 5 5
+    style s1 fill:#99ccff,stroke:#005cbf,stroke-width:2px,color:black
+    style s2 fill:#99ff99,stroke:#009900,stroke-width:2px,color:black
+    style s3 fill:#cc99ff,stroke:#6600cc,stroke-width:2px,color:black
+    style db1 fill:#f8bbd0,stroke:#c2185b,stroke-width:2px,color:black
+    style db2 fill:#f8bbd0,stroke:#c2185b,stroke-width:2px,color:black
+    style db3 fill:#f8bbd0,stroke:#c2185b,stroke-width:2px,color:black
+    style user fill:#ffcdd2,stroke:#b71c1c,stroke-width:2px,color:black
+    style gateway fill:#fff9c4,stroke:#fbc02d,stroke-width:2px,color:black
+    style Services_Layer fill:none,stroke:#666,stroke-width:2px,stroke-dasharray: 5 5,color:#ccc
+    style Data_Layer fill:none,stroke:#666,stroke-width:2px,stroke-dasharray: 5 5,color:#ccc
 ```
 
 ### Giải thích các thành phần:
@@ -89,8 +89,8 @@ flowchart LR
     classDef infra fill:#90A4AE,stroke:#455A64,stroke-width:2px,color:white,rx:5,ry:5;
     classDef service fill:#81C784,stroke:#2E7D32,stroke-width:2px,color:white,font-weight:bold,rx:5,ry:5;
     classDef async fill:#FF8A65,stroke:#D84315,stroke-width:2px,color:white,rx:5,ry:5;
-    classDef db fill:#BA68C8,stroke:#6A1B9A,stroke-width:2px,color:white,shape:cylinder;
-    classDef monitor fill:#E0E0E0,stroke:#616161,stroke-width:1px,stroke-dasharray: 5 5;
+    classDef db fill:#AB47BC,stroke:#6A1B9A,stroke-width:2px,color:white,shape:cylinder;
+    classDef monitor fill:#5C6BC0,stroke:#283593,stroke-width:2px,color:white,stroke-dasharray: 5 5,rx:5,ry:5;
 
     %% --- Clients ---
     subgraph Clients ["Client Layer"]
