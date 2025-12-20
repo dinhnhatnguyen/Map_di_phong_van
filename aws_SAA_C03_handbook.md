@@ -267,3 +267,11 @@ Dữ liệu là vàng. AWS có các kho chứa khác nhau tùy nhu cầu.
 5.  **Cost Optimization (Tối ưu chi phí)**: Chỉ trả tiền cho những gì sử dụng, dùng đúng loại EC2 (Spot Instance, S3 Intelligent-Tiering).
 6.  **Sustainability (Bền vững)**: Giảm thiểu tác động môi trường, tối ưu tài nguyên phần cứng.
 
+---
+
+## 12. Tài liệu tham khảo & Kiến trúc mẫu
+
+Để hiểu rõ hơn cách kết hợp các dịch vụ trên thành một hệ thống thực tế (3-Tier, Serverless, v.v.), hãy xem tài liệu đi kèm:
+
+👉 **[AWS Architecture Patterns (Common Combos)](aws_architecture_combos.md)**
+
