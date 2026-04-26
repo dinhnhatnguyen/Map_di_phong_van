@@ -28,21 +28,23 @@ Nguồn: [AWS certification page](https://aws.amazon.com/certification/certified
 
 ## Những Chủ Đề Phải Nắm
 
+> Nhấp vào tên dịch vụ để xem giải thích chi tiết trong **[Services Overview](services-overview.md)**.
+
 AWS Exam Guide liệt kê các nhóm concept có thể xuất hiện:
 
-- Compute
-- Cost management
-- Database
-- Disaster recovery
-- High performance
-- Management and governance
-- Microservices and component delivery
-- Migration and data transfer
-- Networking, connectivity, and content delivery
-- Resiliency
-- Security
-- Serverless and event-driven design principles
-- Storage
+- Compute _(máy tính/xử lý: EC2, Lambda, container)_
+- Cost management _(quản lý chi phí: tối ưu, giám sát, dự báo ngân sách)_
+- Database _(cơ sở dữ liệu: SQL, NoSQL, cache, warehouse)_
+- Disaster recovery _(khôi phục sau thảm họa: backup, failover, [RTO/RPO](glossary.md#rto))_
+- High performance _(hiệu năng cao: IOPS, throughput, caching, CDN)_
+- Management and governance _(quản trị: audit, compliance, IaC, patch)_
+- Microservices and component delivery _(kiến trúc vi dịch vụ: container, API, decoupling)_
+- Migration and data transfer _(di chuyển lên cloud: database, file, server)_
+- Networking, connectivity, and content delivery _(mạng: VPC, DNS, CDN, hybrid)_
+- Resiliency _(khả năng chịu lỗi: Multi-AZ, failover, loose coupling)_
+- Security _(bảo mật: IAM, encryption, threat detection, compliance)_
+- Serverless and event-driven design principles _(không server, hướng sự kiện: Lambda, SQS, EventBridge)_
+- Storage _(lưu trữ: object, block, file, archive)_
 
 ## In-Scope Services Theo Nhóm
 
@@ -50,27 +52,27 @@ AWS Exam Guide liệt kê các nhóm concept có thể xuất hiện:
 
 ### Rất Quan Trọng
 
-- IAM, IAM Identity Center, Organizations, Control Tower, SCP
-- VPC, subnet, route table, security group, network ACL, NAT Gateway, VPC endpoints
-- ELB: ALB, NLB, Gateway Load Balancer
-- Route 53, CloudFront, Global Accelerator, Direct Connect, Site-to-Site VPN, Transit Gateway, PrivateLink
-- EC2, Auto Scaling, Launch Template, placement group, Spot, Reserved Instances, Savings Plans
-- Lambda, Fargate, ECS, EKS, ECR
-- S3, S3 Glacier, EBS, EFS, FSx, AWS Backup, Storage Gateway
-- RDS, Aurora, DynamoDB, ElastiCache, Redshift
-- SQS, SNS, EventBridge, Step Functions, API Gateway, AppSync
-- CloudWatch, CloudTrail, Config, Systems Manager, Trusted Advisor, Compute Optimizer
-- KMS, ACM, Secrets Manager, WAF, Shield, Cognito, GuardDuty, Macie, Inspector, Security Hub
-- DataSync, DMS, Snow Family, Transfer Family
+- [IAM](services-overview.md#iam), [IAM Identity Center](services-overview.md#iam-identity-center), [Organizations](services-overview.md#organizations), [Control Tower](services-overview.md#control-tower), [SCP](services-overview.md#scp)
+- [VPC](services-overview.md#vpc), [subnet](services-overview.md#subnet), [route table](services-overview.md#route-table), [security group](services-overview.md#security-group), [network ACL](services-overview.md#network-acl), [NAT Gateway](services-overview.md#nat-gateway), [VPC endpoints](services-overview.md#vpc-endpoints)
+- ELB: [ALB](services-overview.md#elb--alb--nlb--gateway-load-balancer), [NLB](services-overview.md#elb--alb--nlb--gateway-load-balancer), [Gateway Load Balancer](services-overview.md#elb--alb--nlb--gateway-load-balancer)
+- [Route 53](services-overview.md#route-53), [CloudFront](services-overview.md#cloudfront), [Global Accelerator](services-overview.md#global-accelerator), [Direct Connect](services-overview.md#direct-connect), [Site-to-Site VPN](services-overview.md#site-to-site-vpn), [Transit Gateway](services-overview.md#transit-gateway), [PrivateLink](services-overview.md#privatelink)
+- [EC2](services-overview.md#ec2), [Auto Scaling](services-overview.md#auto-scaling), [Launch Template](services-overview.md#launch-template), [placement group](services-overview.md#placement-group), [Spot](services-overview.md#spot-instances), [Reserved Instances](services-overview.md#reserved-instances), [Savings Plans](services-overview.md#savings-plans)
+- [Lambda](services-overview.md#lambda), [Fargate](services-overview.md#fargate), [ECS](services-overview.md#ecs), [EKS](services-overview.md#eks), [ECR](services-overview.md#ecr)
+- [S3](services-overview.md#s3), [S3 Glacier](services-overview.md#s3-glacier), [EBS](services-overview.md#ebs), [EFS](services-overview.md#efs), [FSx](services-overview.md#fsx), [AWS Backup](services-overview.md#aws-backup), [Storage Gateway](services-overview.md#storage-gateway)
+- [RDS](services-overview.md#rds), [Aurora](services-overview.md#aurora), [DynamoDB](services-overview.md#dynamodb), [ElastiCache](services-overview.md#elasticache), [Redshift](services-overview.md#redshift)
+- [SQS](services-overview.md#sqs), [SNS](services-overview.md#sns), [EventBridge](services-overview.md#eventbridge), [Step Functions](services-overview.md#step-functions), [API Gateway](services-overview.md#api-gateway), [AppSync](services-overview.md#appsync)
+- [CloudWatch](services-overview.md#cloudwatch), [CloudTrail](services-overview.md#cloudtrail), [Config](services-overview.md#config), [Systems Manager](services-overview.md#systems-manager), [Trusted Advisor](services-overview.md#trusted-advisor), [Compute Optimizer](services-overview.md#compute-optimizer)
+- [KMS](services-overview.md#kms), [ACM](services-overview.md#acm), [Secrets Manager](services-overview.md#secrets-manager), [WAF](services-overview.md#waf), [Shield](services-overview.md#shield), [Cognito](services-overview.md#cognito), [GuardDuty](services-overview.md#guardduty), [Macie](services-overview.md#macie), [Inspector](services-overview.md#inspector), [Security Hub](services-overview.md#security-hub)
+- [DataSync](services-overview.md#datasync), [DMS](services-overview.md#dms), [Snow Family](services-overview.md#snow-family), [Transfer Family](services-overview.md#transfer-family)
 
 ### Nên Biết Để Không Mất Điểm
 
-- Athena, Glue, Kinesis, EMR, Lake Formation, QuickSight, OpenSearch, MSK
-- DocumentDB, Neptune, Keyspaces, QLDB
-- AppFlow, Amazon MQ
-- Elastic Beanstalk, Batch, Outposts, Wavelength, VMware Cloud on AWS
-- CloudFormation, Service Catalog, Well-Architected Tool
-- Comprehend, Polly, Rekognition, Textract, Transcribe, Translate, SageMaker ở mức use case
+- [Athena](services-overview.md#athena), [Glue](services-overview.md#glue), [Kinesis](services-overview.md#kinesis), [EMR](services-overview.md#emr), [Lake Formation](services-overview.md#lake-formation), [QuickSight](services-overview.md#quicksight), [OpenSearch](services-overview.md#opensearch), [MSK](services-overview.md#msk)
+- [DocumentDB](services-overview.md#documentdb), [Neptune](services-overview.md#neptune), [Keyspaces](services-overview.md#keyspaces), [QLDB](services-overview.md#qldb)
+- [AppFlow](services-overview.md#appflow), [Amazon MQ](services-overview.md#amazon-mq)
+- [Elastic Beanstalk](services-overview.md#elastic-beanstalk), [Batch](services-overview.md#batch), [Outposts](services-overview.md#outposts), [Wavelength](services-overview.md#wavelength), [VMware Cloud on AWS](services-overview.md#vmware-cloud-on-aws)
+- [CloudFormation](services-overview.md#cloudformation), [Service Catalog](services-overview.md#service-catalog), [Well-Architected Tool](services-overview.md#well-architected-tool)
+- [Comprehend](services-overview.md#aiml-services-nên-biết--mức-use-case), [Polly](services-overview.md#aiml-services-nên-biết--mức-use-case), [Rekognition](services-overview.md#aiml-services-nên-biết--mức-use-case), [Textract](services-overview.md#aiml-services-nên-biết--mức-use-case), [Transcribe](services-overview.md#aiml-services-nên-biết--mức-use-case), [Translate](services-overview.md#aiml-services-nên-biết--mức-use-case), [SageMaker](services-overview.md#aiml-services-nên-biết--mức-use-case) ở mức use case
 
 ### Out-of-Scope Cần Nhận Ra
 
