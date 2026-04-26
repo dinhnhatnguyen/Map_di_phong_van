@@ -1,5 +1,7 @@
 # Architecture Patterns
 
+> Gặp từ viết tắt không quen? Xem **[Từ Điển](../00-start-here/glossary.md)**.
+
 File này gom các kiến trúc hay gặp trong SAA-C03. Khi luyện đề, hãy tập đọc requirement rồi map về một pattern gần nhất.
 
 ## 1. Secure 3-Tier Web Architecture
@@ -49,11 +51,11 @@ Chọn khi:
 
 Điểm thi:
 
-- RDS Multi-AZ cho failover.
+- [RDS](../01-core-services/databases.md) Multi-AZ cho failover.
 - Read Replica nếu đọc nhiều.
 - Security Group DB chỉ allow từ SG app.
-- CloudFront + WAF nếu global/web protection.
-- VPC endpoint để private access S3/DynamoDB và giảm NAT cost.
+- CloudFront + [WAF](../00-start-here/glossary.md#waf) nếu global/web protection.
+- [VPC endpoint](../01-core-services/networking.md#vpc-endpoints) để private access S3/DynamoDB và giảm [NAT](../00-start-here/glossary.md#nat) cost.
 
 ---
 
@@ -80,8 +82,8 @@ Chọn khi:
 
 Điểm thi:
 
-- CloudFront Origin Access Control giữ S3 không public.
-- ACM certificate cho CloudFront phải tạo ở **us-east-1**.
+- [CloudFront Origin Access Control (OAC)](../00-start-here/glossary.md#oac--oai) giữ S3 không public.
+- [ACM](../00-start-here/glossary.md#acm) certificate cho CloudFront phải tạo ở **us-east-1**.
 - S3 lifecycle cho logs/assets cũ.
 
 ---
@@ -113,10 +115,10 @@ Chọn khi:
 
 Điểm thi:
 
-- Lambda timeout tối đa 15 phút.
+- Lambda timeout tối đa 15 phút ([Cold start](../00-start-here/glossary.md#cold-start) giảm bằng Provisioned Concurrency).
 - DynamoDB on-demand cho unpredictable traffic.
-- DAX cho read-heavy low latency.
-- RDS Proxy nếu Lambda gọi RDS.
+- [DAX](../00-start-here/glossary.md#dax) cho read-heavy low latency.
+- RDS Proxy nếu Lambda gọi [RDS](../00-start-here/glossary.md#rds).
 
 ---
 
@@ -146,9 +148,9 @@ Chọn khi:
 
 Điểm thi:
 
-- SNS fan-out.
-- SQS per consumer để decouple.
-- DLQ để xử lý lỗi.
+- [SNS](../00-start-here/glossary.md#sns) [fan-out](../00-start-here/glossary.md#fan-out).
+- [SQS](../00-start-here/glossary.md#sqs) per consumer để [decouple](../00-start-here/glossary.md#decouple--loose-coupling).
+- [DLQ](../00-start-here/glossary.md#dlq) để xử lý lỗi.
 
 ---
 
@@ -176,9 +178,9 @@ Chọn khi:
 
 Điểm thi:
 
-- Scale worker theo queue depth.
-- Visibility timeout > max processing time.
-- DLQ after maxReceiveCount.
+- Scale worker theo queue depth (metric `ApproximateNumberOfMessages`).
+- [Visibility Timeout](../00-start-here/glossary.md#visibility-timeout) > max processing time.
+- [DLQ](../00-start-here/glossary.md#dlq) after maxReceiveCount.
 
 ---
 
@@ -263,8 +265,8 @@ Chọn khi:
 
 Điểm thi:
 
-- Heterogeneous: SCT + DMS.
-- Ongoing replication/CDC để giảm downtime.
+- Heterogeneous: [SCT](../00-start-here/glossary.md#sct) + [DMS](../00-start-here/glossary.md#dms).
+- Ongoing replication/[CDC](../00-start-here/glossary.md#cdc) để giảm downtime.
 
 ---
 
@@ -300,18 +302,18 @@ flowchart TB
 
 DR strategies:
 
-| Strategy           |     Cost |    RTO/RPO | Khi dùng                            |
-| ------------------ | -------: | ---------: | ----------------------------------- |
-| Backup and restore |     Thấp |        Cao | Cost-first, downtime chấp nhận được |
-| Pilot light        | Thấp-vừa | Trung bình | Core data/services always ready     |
-| Warm standby       |  Vừa-cao |       Thấp | Reduced-capacity environment ready  |
-| Active-active      |      Cao |   Rất thấp | Global critical workload            |
+| Strategy | Cost | [RTO](../00-start-here/glossary.md#rto) / [RPO](../00-start-here/glossary.md#rpo) | Khi dùng |
+|---|---:|---:|---|
+| Backup and restore | Thấp | Cao | Cost-first, downtime chấp nhận được |
+| [Pilot light](../00-start-here/glossary.md#pilot-light) | Thấp-vừa | Trung bình | Core data/services always ready |
+| [Warm standby](../00-start-here/glossary.md#warm-standby) | Vừa-cao | Thấp | Reduced-capacity environment ready |
+| [Active-active](../00-start-here/glossary.md#active-active) | Cao | Rất thấp | Global critical workload |
 
 Điểm thi:
 
-- RTO = thời gian khôi phục.
-- RPO = lượng dữ liệu có thể mất.
-- Multi-AZ không thay thế multi-Region DR.
+- [RTO](../00-start-here/glossary.md#rto) = thời gian khôi phục dịch vụ.
+- [RPO](../00-start-here/glossary.md#rpo) = lượng dữ liệu có thể mất.
+- [Multi-AZ](../00-start-here/glossary.md#multi-az) không thay thế [Multi-Region](../00-start-here/glossary.md#multi-region) DR.
 
 ---
 

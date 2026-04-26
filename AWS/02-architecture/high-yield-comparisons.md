@@ -1,5 +1,7 @@
 # High-Yield Comparisons
 
+> Gặp từ viết tắt không quen? Xem **[Từ Điển](../00-start-here/glossary.md)**.
+
 Những cặp dưới đây là nơi đề SAA-C03 hay gài. Hãy học bằng cách tự giải thích "tại sao không chọn cái còn lại".
 
 ## RDS Multi-AZ vs Read Replica

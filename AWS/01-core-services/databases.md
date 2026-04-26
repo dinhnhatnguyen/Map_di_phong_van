@@ -1,5 +1,7 @@
 # Databases
 
+> Gặp từ viết tắt không quen? Xem **[Từ Điển](../00-start-here/glossary.md)**.
+
 SAA-C03 hỏi database theo access pattern: relational hay NoSQL, read-heavy hay write-heavy, global hay single Region, cần transaction hay key-value, cần managed hay tự quản.
 
 ## Database Map

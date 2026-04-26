@@ -1,5 +1,7 @@
 # Compute
 
+> Gặp từ viết tắt không quen? Xem **[Từ Điển](../00-start-here/glossary.md)**.
+
 Compute trong SAA-C03 không chỉ là "chạy server". Đề thường hỏi chọn compute theo operational overhead, scaling, latency, cost, workload duration, và mức kiểm soát OS.
 
 ## Service Map

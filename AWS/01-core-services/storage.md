@@ -1,5 +1,7 @@
 # Storage
 
+> Gặp từ viết tắt không quen? Xem **[Từ Điển](../00-start-here/glossary.md)**.
+
 SAA-C03 hay hỏi storage theo kiểu dữ liệu, access pattern, performance, durability, retention, encryption và cost. Hãy bắt đầu bằng câu hỏi: object, block hay file?
 
 ## Storage Map

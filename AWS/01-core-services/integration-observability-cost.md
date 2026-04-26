@@ -1,5 +1,7 @@
 # Integration, Observability, Governance, Cost
 
+> Gặp từ viết tắt không quen? Xem **[Từ Điển](../00-start-here/glossary.md)**.
+
 Nhóm này giúp kiến trúc bền, dễ vận hành và tối ưu chi phí. Đề SAA-C03 rất thích cụm từ "loosely coupled", "least operational overhead", "monitor", "audit", "cost-effective".
 
 ## Application Integration Map

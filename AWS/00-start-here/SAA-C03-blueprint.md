@@ -1,5 +1,7 @@
 # SAA-C03 Blueprint
 
+> Gặp từ viết tắt không quen? Xem **[Từ Điển](glossary.md)**.
+
 File này là bản đồ học. Mục tiêu là biết đề thi đang kiểm tra năng lực thiết kế kiến trúc, không kiểm tra nhớ lệnh CLI hay lập trình sâu.
 
 ## Exam Overview

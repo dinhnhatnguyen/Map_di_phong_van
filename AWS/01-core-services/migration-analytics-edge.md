@@ -1,5 +1,7 @@
 # Migration, Analytics, Edge, And Specialty Services
 
+> Gặp từ viết tắt không quen? Xem **[Từ Điển](../00-start-here/glossary.md)**.
+
 SAA-C03 không yêu cầu bạn thành chuyên gia analytics/ML, nhưng cần biết service nào giải quyết đúng bài toán migration, ingestion, transformation, visualization, global edge, và vài use case ML managed.
 
 ## Migration And Transfer

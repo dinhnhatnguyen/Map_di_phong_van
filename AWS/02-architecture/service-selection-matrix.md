@@ -1,5 +1,7 @@
 # Service Selection Matrix
 
+> Gặp từ viết tắt không quen? Xem **[Từ Điển](../00-start-here/glossary.md)**.
+
 Đây là bảng "nhìn requirement chọn service". Dùng sau khi học từng service để luyện phản xạ làm đề.
 
 ## Compute

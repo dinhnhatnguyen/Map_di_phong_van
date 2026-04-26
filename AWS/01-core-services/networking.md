@@ -1,5 +1,7 @@
 # Networking
 
+> Gặp từ viết tắt không quen? Xem **[Từ Điển](../00-start-here/glossary.md)**.
+
 Networking là phần ăn điểm lớn vì nó chạm cả security, resilience, performance và cost. Hãy nắm VPC thật chắc trước khi học service khác.
 
 ## VPC Core

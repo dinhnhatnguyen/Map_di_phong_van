@@ -1,5 +1,7 @@
 # Security And Identity
 
+> Gặp từ viết tắt không quen? Xem **[Từ Điển](../00-start-here/glossary.md)**.
+
 Security là domain lớn nhất của SAA-C03. Hãy nhớ: đề thường ưu tiên least privilege, managed identity, encryption, private access, auditability và centralized governance.
 
 ## Identity Map
