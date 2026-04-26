@@ -32,14 +32,20 @@ Nguồn: [Amazon VPC User Guide](https://docs.aws.amazon.com/vpc/), [Elastic Loa
 
 ```mermaid
 flowchart TD
-    User((Internet User)) --> ALB[Public ALB]
-    ALB --> App1[EC2/ECS private AZ A]
-    ALB --> App2[EC2/ECS private AZ B]
-    App1 --> DB[(RDS private)]
+    classDef internet fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef lb       fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef compute  fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef db       fill:#f3e8ff,stroke:#9333ea,color:#581c87
+    classDef nat      fill:#f1f5f9,stroke:#64748b,color:#1e293b
+
+    User((🌐 Internet User)):::internet --> ALB[Public ALB]:::lb
+    ALB --> App1[EC2/ECS — AZ A]:::compute
+    ALB --> App2[EC2/ECS — AZ B]:::compute
+    App1 --> DB[(RDS Multi-AZ)]:::db
     App2 --> DB
-    App1 --> NAT[NAT Gateway]
-    App2 --> NAT2[NAT Gateway]
-    NAT --> IGW[Internet Gateway]
+    App1 --> NAT1[NAT Gateway AZ-A]:::nat
+    App2 --> NAT2[NAT Gateway AZ-B]:::nat
+    NAT1 --> IGW[Internet Gateway]:::nat
     NAT2 --> IGW
 ```
 

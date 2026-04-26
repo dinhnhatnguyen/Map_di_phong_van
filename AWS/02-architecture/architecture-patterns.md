@@ -6,25 +6,38 @@ File này gom các kiến trúc hay gặp trong SAA-C03. Khi luyện đề, hãy
 
 ```mermaid
 flowchart TD
-    User((Users)) --> R53[Route 53]
-    R53 --> CF[CloudFront + WAF]
-    CF --> ALB[Public ALB]
-    subgraph VPC[VPC across 2+ AZs]
-      subgraph Public[Public subnets]
+    classDef internet fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef edge    fill:#fef3c7,stroke:#d97706,color:#92400e
+    classDef lb      fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef compute fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef db      fill:#f3e8ff,stroke:#9333ea,color:#581c87
+    classDef storage fill:#cffafe,stroke:#0891b2,color:#164e63
+    classDef nat     fill:#f1f5f9,stroke:#64748b,color:#1e293b
+    classDef endpoint fill:#e0e7ff,stroke:#4f46e5,color:#312e81
+
+    User((Users)):::internet --> R53[Route 53]:::edge
+    R53 --> CF[CloudFront + WAF]:::edge
+    CF --> ALB[Public ALB]:::lb
+
+    subgraph VPC[VPC — 2+ AZs]
+      subgraph Pub[Public Subnets]
         ALB
-        NAT1[NAT Gateway AZ A]
-        NAT2[NAT Gateway AZ B]
+        NAT1[NAT Gateway AZ-A]:::nat
+        NAT2[NAT Gateway AZ-B]:::nat
       end
-      subgraph PrivateApp[Private app subnets]
-        ASG[EC2 Auto Scaling Group]
+      subgraph App[Private App Subnets]
+        ASG[EC2 Auto Scaling Group]:::compute
       end
-      subgraph PrivateData[Private DB subnets]
-        RDS[(RDS Multi-AZ)]
+      subgraph Data[Private DB Subnets]
+        RDS[(RDS Multi-AZ)]:::db
       end
     end
+
     ALB --> ASG
     ASG --> RDS
-    ASG --> VPCE[S3/DynamoDB VPC Endpoint]
+    ASG --> NAT1
+    ASG --> NAT2
+    ASG --> EP[S3 / DynamoDB VPC Endpoint]:::endpoint
 ```
 
 Chọn khi:
@@ -42,15 +55,21 @@ Chọn khi:
 - CloudFront + WAF nếu global/web protection.
 - VPC endpoint để private access S3/DynamoDB và giảm NAT cost.
 
+---
+
 ## 2. Static Website Global
 
 ```mermaid
 flowchart LR
-    User((Users)) --> R53[Route 53 Alias]
-    R53 --> CF[CloudFront]
-    CF --> S3[(Private S3 Origin)]
-    CF --> WAF[AWS WAF]
-    S3 --> Logs[(S3 Access Logs / CloudTrail Data Events)]
+    classDef internet fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef edge    fill:#fef3c7,stroke:#d97706,color:#92400e
+    classDef storage fill:#cffafe,stroke:#0891b2,color:#164e63
+
+    User((Users)):::internet --> R53[Route 53 Alias]:::edge
+    R53 --> CF[CloudFront + OAC]:::edge
+    CF --> WAF[AWS WAF]:::edge
+    CF --> S3[(Private S3 Origin)]:::storage
+    S3 --> Logs[(S3 Access Logs)]:::storage
 ```
 
 Chọn khi:
@@ -61,20 +80,29 @@ Chọn khi:
 
 Điểm thi:
 
-- Use CloudFront Origin Access Control để S3 không public.
-- ACM certificate cho CloudFront ở us-east-1.
+- CloudFront Origin Access Control giữ S3 không public.
+- ACM certificate cho CloudFront phải tạo ở **us-east-1**.
 - S3 lifecycle cho logs/assets cũ.
+
+---
 
 ## 3. Serverless API
 
 ```mermaid
 flowchart LR
-    Client((Client)) --> APIGW[API Gateway]
-    APIGW --> Lambda[AWS Lambda]
-    Lambda --> DDB[(DynamoDB)]
-    Lambda --> SM[Secrets Manager]
-    DDB --> Streams[DynamoDB Streams]
-    Streams --> Worker[Lambda Worker]
+    classDef internet  fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef edge      fill:#fef3c7,stroke:#d97706,color:#92400e
+    classDef compute   fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef db        fill:#f3e8ff,stroke:#9333ea,color:#581c87
+    classDef security  fill:#fce7f3,stroke:#db2777,color:#831843
+    classDef integration fill:#fff7ed,stroke:#ea580c,color:#7c2d12
+
+    Client((Client)):::internet --> APIGW[API Gateway]:::edge
+    APIGW --> Lambda[AWS Lambda]:::compute
+    Lambda --> DDB[(DynamoDB)]:::db
+    Lambda --> SM[Secrets Manager]:::security
+    DDB --> Streams[DynamoDB Streams]:::integration
+    Streams --> Worker[Lambda Worker]:::compute
 ```
 
 Chọn khi:
@@ -90,18 +118,24 @@ Chọn khi:
 - DAX cho read-heavy low latency.
 - RDS Proxy nếu Lambda gọi RDS.
 
+---
+
 ## 4. Fan-Out Event Processing
 
 ```mermaid
 flowchart LR
-    Event[Order Created] --> SNS[SNS Topic]
-    SNS --> Q1[SQS Email Queue]
-    SNS --> Q2[SQS Inventory Queue]
-    SNS --> Q3[SQS Analytics Queue]
-    Q1 --> L1[Lambda Email]
-    Q2 --> W2[EC2/ECS Worker]
-    Q3 --> Firehose[Kinesis Firehose]
-    Firehose --> S3[(S3 Data Lake)]
+    classDef integration fill:#fff7ed,stroke:#ea580c,color:#7c2d12
+    classDef compute     fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef storage     fill:#cffafe,stroke:#0891b2,color:#164e63
+
+    Event([Order Created]):::integration --> SNS[SNS Topic]:::integration
+    SNS --> Q1[SQS Email Queue]:::integration
+    SNS --> Q2[SQS Inventory Queue]:::integration
+    SNS --> Q3[SQS Analytics Queue]:::integration
+    Q1 --> L1[Lambda — Email]:::compute
+    Q2 --> W2[ECS Worker — Inventory]:::compute
+    Q3 --> KF[Kinesis Firehose]:::integration
+    KF --> S3[(S3 Data Lake)]:::storage
 ```
 
 Chọn khi:
@@ -116,15 +150,22 @@ Chọn khi:
 - SQS per consumer để decouple.
 - DLQ để xử lý lỗi.
 
+---
+
 ## 5. Queue-Based Worker Scaling
 
 ```mermaid
 flowchart LR
-    Producer[Producers] --> SQS[SQS Queue]
-    SQS --> ASG[Auto Scaling Workers]
-    ASG --> DB[(RDS/DynamoDB)]
-    CW[CloudWatch ApproximateNumberOfMessages] --> ASG
-    SQS --> DLQ[Dead Letter Queue]
+    classDef compute     fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef integration fill:#fff7ed,stroke:#ea580c,color:#7c2d12
+    classDef db          fill:#f3e8ff,stroke:#9333ea,color:#581c87
+    classDef edge        fill:#fef3c7,stroke:#d97706,color:#92400e
+
+    Prod[Producers]:::compute --> SQS[SQS Queue]:::integration
+    SQS --> ASG[Auto Scaling Workers]:::compute
+    ASG --> DB[(RDS / DynamoDB)]:::db
+    CW[CloudWatch\nApproximateNumberOfMessages]:::edge --> ASG
+    SQS --> DLQ[Dead Letter Queue]:::integration
 ```
 
 Chọn khi:
@@ -139,16 +180,25 @@ Chọn khi:
 - Visibility timeout > max processing time.
 - DLQ after maxReceiveCount.
 
+---
+
 ## 6. Container Microservices
 
 ```mermaid
 flowchart TD
-    User((Users)) --> ALB[ALB]
-    ALB --> ECS[ECS Service on Fargate]
-    ECS --> DDB[(DynamoDB)]
-    ECS --> Aurora[(Aurora)]
-    ECS --> SQS[SQS]
-    ECR[ECR] --> ECS
+    classDef internet fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef lb       fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef compute  fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef db       fill:#f3e8ff,stroke:#9333ea,color:#581c87
+    classDef storage  fill:#cffafe,stroke:#0891b2,color:#164e63
+    classDef integration fill:#fff7ed,stroke:#ea580c,color:#7c2d12
+
+    User((Users)):::internet --> ALB[ALB]:::lb
+    ALB --> ECS[ECS Service — Fargate]:::compute
+    ECR[(ECR Image Registry)]:::storage --> ECS
+    ECS --> DDB[(DynamoDB)]:::db
+    ECS --> Aurora[(Aurora)]:::db
+    ECS --> SQS[SQS]:::integration
 ```
 
 Chọn khi:
@@ -163,14 +213,22 @@ Chọn khi:
 - ECS on EC2 = more control/cost tuning.
 - EKS nếu yêu cầu Kubernetes.
 
+---
+
 ## 7. Hybrid Storage
 
 ```mermaid
 flowchart LR
-    OnPrem[On-prem file servers] --> SG[Storage Gateway File Gateway]
-    SG --> S3[(S3)]
-    OnPrem --> DS[DataSync Agent]
-    DS --> EFS[EFS/FSx/S3]
+    classDef onprem   fill:#fefce8,stroke:#ca8a04,color:#713f12
+    classDef storage  fill:#cffafe,stroke:#0891b2,color:#164e63
+    classDef migration fill:#ecfdf5,stroke:#059669,color:#064e3b
+
+    OnPrem[On-Premises\nFile Servers]:::onprem --> SG[Storage Gateway\nFile Gateway]:::migration
+    SG --> S3[(S3)]:::storage
+    OnPrem --> DS[DataSync Agent]:::migration
+    DS --> EFS[EFS]:::storage
+    DS --> FSx[FSx]:::storage
+    DS --> S3
 ```
 
 Chọn khi:
@@ -179,14 +237,22 @@ Chọn khi:
 - Cần migrate/sync file nhanh: DataSync.
 - Cần archive tape replacement: Tape Gateway.
 
+---
+
 ## 8. Database Migration With Low Downtime
 
 ```mermaid
 flowchart LR
-    Source[(On-prem DB)] --> DMS[AWS DMS CDC]
-    SCT[AWS Schema Conversion Tool] --> Target[(Aurora/RDS)]
+    classDef onprem   fill:#fefce8,stroke:#ca8a04,color:#713f12
+    classDef migration fill:#ecfdf5,stroke:#059669,color:#064e3b
+    classDef db        fill:#f3e8ff,stroke:#9333ea,color:#581c87
+    classDef compute   fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+
+    Src[(On-Prem DB)]:::onprem --> SCT[AWS Schema\nConversion Tool]:::migration
+    Src --> DMS[AWS DMS — CDC]:::migration
+    SCT --> Target[(Aurora / RDS)]:::db
     DMS --> Target
-    App[Application] -. cutover .-> Target
+    App[Application]:::compute -. cutover .-> Target
 ```
 
 Chọn khi:
@@ -200,27 +266,46 @@ Chọn khi:
 - Heterogeneous: SCT + DMS.
 - Ongoing replication/CDC để giảm downtime.
 
+---
+
 ## 9. Multi-Region Disaster Recovery
 
 ```mermaid
 flowchart TB
-    Users((Users)) --> R53[Route 53 Failover/Latency]
-    R53 --> Primary[Primary Region]
-    R53 --> Secondary[Secondary Region]
-    Primary --> S3A[(S3 CRR)]
-    S3A --> S3B[(S3 Secondary)]
-    Primary --> DB1[(Aurora Global / DynamoDB Global)]
-    DB1 <--> DB2[(Secondary DB)]
+    classDef internet    fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef edge        fill:#fef3c7,stroke:#d97706,color:#92400e
+    classDef compute     fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef db          fill:#f3e8ff,stroke:#9333ea,color:#581c87
+    classDef storage     fill:#cffafe,stroke:#0891b2,color:#164e63
+
+    Users((Users)):::internet --> R53[Route 53 Failover /\nLatency Routing]:::edge
+
+    subgraph Primary[Primary Region]
+      PApp[App Tier]:::compute
+      PDB[(Aurora Global /\nDynamoDB Global — Writer)]:::db
+      PS3[(S3 — CRR Source)]:::storage
+    end
+
+    subgraph Secondary[Secondary Region]
+      SApp[App Tier\n— standby]:::compute
+      SDB[(Aurora Global /\nDynamoDB Global — Reader)]:::db
+      SS3[(S3 — CRR Target)]:::storage
+    end
+
+    R53 --> Primary
+    R53 -.failover.-> Secondary
+    PDB <-->|global replication| SDB
+    PS3 -->|Cross-Region Replication| SS3
 ```
 
 DR strategies:
 
-| Strategy | Cost | RTO/RPO | Khi dùng |
-|---|---:|---:|---|
-| Backup and restore | Thấp | Cao | Cost-first, downtime chấp nhận được |
-| Pilot light | Thấp-vừa | Trung bình | Core data/services always ready |
-| Warm standby | Vừa-cao | Thấp | Reduced-capacity environment ready |
-| Active-active | Cao | Rất thấp | Global critical workload |
+| Strategy           |     Cost |    RTO/RPO | Khi dùng                            |
+| ------------------ | -------: | ---------: | ----------------------------------- |
+| Backup and restore |     Thấp |        Cao | Cost-first, downtime chấp nhận được |
+| Pilot light        | Thấp-vừa | Trung bình | Core data/services always ready     |
+| Warm standby       |  Vừa-cao |       Thấp | Reduced-capacity environment ready  |
+| Active-active      |      Cao |   Rất thấp | Global critical workload            |
 
 Điểm thi:
 
@@ -228,17 +313,24 @@ DR strategies:
 - RPO = lượng dữ liệu có thể mất.
 - Multi-AZ không thay thế multi-Region DR.
 
+---
+
 ## 10. Data Lake Analytics
 
 ```mermaid
 flowchart LR
-    Sources[Apps/Logs/Streams] --> Firehose[Kinesis Firehose]
-    Sources --> DataSync[DataSync]
-    Firehose --> S3[(S3 Data Lake)]
-    DataSync --> S3
-    Glue[Glue Crawler/Catalog/ETL] --> S3
-    Athena[Athena] --> S3
-    QuickSight[QuickSight] --> Athena
+    classDef integration fill:#fff7ed,stroke:#ea580c,color:#7c2d12
+    classDef migration   fill:#ecfdf5,stroke:#059669,color:#064e3b
+    classDef storage     fill:#cffafe,stroke:#0891b2,color:#164e63
+    classDef analytics   fill:#fffbeb,stroke:#d97706,color:#78350f
+
+    Src1[Apps / Logs]:::integration --> KF[Kinesis Firehose]:::integration
+    Src2[On-Prem Files]:::migration --> DS[DataSync]:::migration
+    KF --> S3[(S3 Data Lake)]:::storage
+    DS --> S3
+    S3 --> Glue[Glue Crawler\n+ Catalog + ETL]:::analytics
+    Glue --> Athena[Athena\nServerless SQL]:::analytics
+    Athena --> QS[QuickSight\nDashboard]:::analytics
 ```
 
 Chọn khi:
@@ -248,17 +340,26 @@ Chọn khi:
 - Transform/catalog bằng Glue.
 - Dashboard bằng QuickSight.
 
+---
+
 ## 11. Private AWS Service Access
 
 ```mermaid
 flowchart TD
-    subgraph PrivateSubnet[Private Subnet]
-      App[EC2/Lambda/ECS]
+    classDef compute  fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef endpoint fill:#e0e7ff,stroke:#4f46e5,color:#312e81
+    classDef storage  fill:#cffafe,stroke:#0891b2,color:#164e63
+    classDef security fill:#fce7f3,stroke:#db2777,color:#831843
+    classDef edge     fill:#fef3c7,stroke:#d97706,color:#92400e
+
+    subgraph PrivSub[Private Subnet]
+      App[EC2 / Lambda / ECS]:::compute
     end
-    App --> GWEP[Gateway Endpoint: S3/DynamoDB]
-    App --> IFEP[Interface Endpoint: Secrets Manager/KMS/CloudWatch]
-    GWEP --> S3[(S3)]
-    IFEP --> AWSService[AWS Service PrivateLink]
+
+    App --> GW[Gateway Endpoint\nS3 · DynamoDB]:::endpoint
+    App --> IF[Interface Endpoint\nSecrets Manager · KMS\nCloudWatch · SSM]:::endpoint
+    GW --> S3[(S3)]:::storage
+    IF --> AWSSVC[AWS Service\nvia PrivateLink]:::edge
 ```
 
 Chọn khi:
@@ -267,21 +368,23 @@ Chọn khi:
 - Muốn giảm NAT cost cho S3/DynamoDB.
 - Muốn chặt security bằng endpoint policy.
 
+---
+
 ## Pattern Selection
 
-| Nếu đề nói | Pattern |
-|---|---|
-| Web app HA, private database | Secure 3-tier |
-| Static assets global | Static website global |
-| No servers, variable traffic | Serverless API |
-| One event triggers many flows | Fan-out |
-| Workers overloaded by spikes | Queue-based scaling |
-| Docker app, less ops | Container microservices |
-| On-prem files to AWS | Hybrid storage |
-| DB migration low downtime | DMS CDC |
-| Region failure requirement | Multi-Region DR |
-| Query logs in S3 | Data lake analytics |
-| Private subnet calling AWS API | VPC endpoints |
+| Nếu đề nói                     | Pattern                 |
+| ------------------------------ | ----------------------- |
+| Web app HA, private database   | Secure 3-tier           |
+| Static assets global           | Static website global   |
+| No servers, variable traffic   | Serverless API          |
+| One event triggers many flows  | Fan-out                 |
+| Workers overloaded by spikes   | Queue-based scaling     |
+| Docker app, less ops           | Container microservices |
+| On-prem files to AWS           | Hybrid storage          |
+| DB migration low downtime      | DMS CDC                 |
+| Region failure requirement     | Multi-Region DR         |
+| Query logs in S3               | Data lake analytics     |
+| Private subnet calling AWS API | VPC endpoints           |
 
 ## Liên Kết
 
